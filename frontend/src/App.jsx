@@ -6,7 +6,6 @@ import {
 } from "react-router-dom";
 
 import Auth from "./pages/Auth";
-import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 
 
@@ -16,17 +15,10 @@ import Dashboard from "./pages/Dashboard";
 
 function ProtectedRoute({ children }) {
 
-    const token = localStorage.getItem(
-        "smartpick_token"
-    );
+    const token = localStorage.getItem("smartpick_token");
 
     if (!token) {
-        return (
-            <Navigate
-                to="/login"
-                replace
-            />
-        );
+        return <Navigate to="/login" replace />;
     }
 
     return children;
@@ -45,12 +37,8 @@ function App() {
             <Routes>
 
                 {/* =================================
-                    MAIN URL
-                    https://smartpick-frontend-nt34.onrender.com
-                    ↓
-                    LOGIN
-                ================================== */}
-
+                    ROOT → LOGIN
+                ================================= */}
                 <Route
                     path="/"
                     element={
@@ -64,18 +52,16 @@ function App() {
 
                 {/* =================================
                     LOGIN
-                ================================== */}
-
+                ================================= */}
                 <Route
                     path="/login"
-                    element={<Login />}
+                    element={<Auth />}
                 />
 
 
                 {/* =================================
                     REGISTER
-                ================================== */}
-
+                ================================= */}
                 <Route
                     path="/register"
                     element={<Auth />}
@@ -83,9 +69,8 @@ function App() {
 
 
                 {/* =================================
-                    PROTECTED DASHBOARD
-                ================================== */}
-
+                    DASHBOARD
+                ================================= */}
                 <Route
                     path="/dashboard"
                     element={
@@ -97,10 +82,8 @@ function App() {
 
 
                 {/* =================================
-                    UNKNOWN URL
-                    SEND TO LOGIN
-                ================================== */}
-
+                    ANY UNKNOWN URL → LOGIN
+                ================================= */}
                 <Route
                     path="*"
                     element={
