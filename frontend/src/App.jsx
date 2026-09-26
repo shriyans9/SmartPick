@@ -6,8 +6,13 @@ import {
 } from "react-router-dom";
 
 import Auth from "./pages/Auth";
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 
+
+// ========================================
+// PROTECTED ROUTE
+// ========================================
 
 function ProtectedRoute({ children }) {
 
@@ -16,12 +21,21 @@ function ProtectedRoute({ children }) {
     );
 
     if (!token) {
-        return <Navigate to="/login" replace />;
+        return (
+            <Navigate
+                to="/login"
+                replace
+            />
+        );
     }
 
     return children;
 }
 
+
+// ========================================
+// APP
+// ========================================
 
 function App() {
 
@@ -30,22 +44,37 @@ function App() {
 
             <Routes>
 
+                {/* =================================
+                    MAIN URL
+                    https://smartpick-frontend-nt34.onrender.com
+                    ↓
+                    LOGIN
+                ================================== */}
+
                 <Route
                     path="/"
                     element={
                         <Navigate
-                            to="/dashboard"
+                            to="/login"
                             replace
                         />
                     }
                 />
 
 
+                {/* =================================
+                    LOGIN
+                ================================== */}
+
                 <Route
                     path="/login"
-                    element={<Auth />}
+                    element={<Login />}
                 />
 
+
+                {/* =================================
+                    REGISTER
+                ================================== */}
 
                 <Route
                     path="/register"
@@ -53,12 +82,32 @@ function App() {
                 />
 
 
+                {/* =================================
+                    PROTECTED DASHBOARD
+                ================================== */}
+
                 <Route
                     path="/dashboard"
                     element={
                         <ProtectedRoute>
                             <Dashboard />
                         </ProtectedRoute>
+                    }
+                />
+
+
+                {/* =================================
+                    UNKNOWN URL
+                    SEND TO LOGIN
+                ================================== */}
+
+                <Route
+                    path="*"
+                    element={
+                        <Navigate
+                            to="/login"
+                            replace
+                        />
                     }
                 />
 
