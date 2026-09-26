@@ -64,12 +64,33 @@ jwt = JWTManager(app)
 # --------------------------------
 
 database_url = os.getenv("DATABASE_URL")
-if database_url and database_url.startswith("postgresql+psycopg2://"):
-    database_url = database_url.replace(
-        "postgresql+psycopg2://",
-        "postgresql+psycopg://",
-        1
+
+if database_url:
+    if database_url.startswith("postgresql+psycopg2://"):
+        database_url = database_url.replace(
+            "postgresql+psycopg2://",
+            "postgresql+psycopg://",
+            1
+        )
+    elif database_url.startswith("postgresql://"):
+        database_url = database_url.replace(
+            "postgresql://",
+            "postgresql+psycopg://",
+            1
+        )
+    elif database_url.startswith("postgres://"):
+        database_url = database_url.replace(
+            "postgres://",
+            "postgresql+psycopg://",
+            1
+        )
+
+if not database_url:
+    raise RuntimeError(
+        "DATABASE_URL is not configured in .env"
     )
+
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 
 if not database_url:
     raise RuntimeError(
@@ -102,7 +123,12 @@ app.register_blueprint(auth_bp)
 with app.app_context():
     db.create_all()
 
-
+@app.route("/")
+def home():
+    return {
+        "status": "success",
+        "message": "SmartPick backend is running!"
+    }
 # --------------------------------
 # API Health Check
 # --------------------------------
