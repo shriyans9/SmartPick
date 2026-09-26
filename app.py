@@ -64,6 +64,12 @@ jwt = JWTManager(app)
 # --------------------------------
 
 database_url = os.getenv("DATABASE_URL")
+if database_url and database_url.startswith("postgresql+psycopg2://"):
+    database_url = database_url.replace(
+        "postgresql+psycopg2://",
+        "postgresql+psycopg://",
+        1
+    )
 
 if not database_url:
     raise RuntimeError(
